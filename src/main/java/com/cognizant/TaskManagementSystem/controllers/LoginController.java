@@ -1,6 +1,8 @@
 package com.cognizant.TaskManagementSystem.controllers;
 
 import com.cognizant.TaskManagementSystem.dto.LoginRequest;
+import com.cognizant.TaskManagementSystem.exceptions.InvalidRequestException;
+import com.cognizant.TaskManagementSystem.exceptions.UnauthorizedAccessException;
 import com.cognizant.TaskManagementSystem.security.JwtUtil;
 import com.cognizant.TaskManagementSystem.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,13 +35,12 @@ public class LoginController {
             String token = authHeader.substring(7);
             if (jwtUtil.isTokenValid(token)) {
                 return ResponseEntity.ok(new JwtResponse(token));
-            } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
             }
+            throw new UnauthorizedAccessException("Invalid token. Please login again.");
         }
 
         if (request == null || request.getUsername() == null || request.getPassword() == null) {
-            return ResponseEntity.badRequest().body("Username and password must be provided");
+            throw new InvalidRequestException("Username and password must be provided");
         }
 
         Authentication authentication = authManager.authenticate(

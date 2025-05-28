@@ -1,5 +1,6 @@
 package com.cognizant.TaskManagementSystem.controllers;
 
+import com.cognizant.TaskManagementSystem.exceptions.InvalidRequestException;
 import com.cognizant.TaskManagementSystem.models.User;
 import com.cognizant.TaskManagementSystem.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ public class SignupController {
     @PostMapping
     public ResponseEntity<?> registerUser(@RequestBody User user) {
         if (user.getUsername() == null || user.getPassword() == null || user.getRole() == null) {
-            return ResponseEntity.badRequest().body("Username, password, and role must be provided.");
+            throw new InvalidRequestException("Username, password, and role must be provided.");
         }
         us.addUser(user);
         return ResponseEntity.ok().build();
