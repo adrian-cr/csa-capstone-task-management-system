@@ -12,9 +12,9 @@ public class UserService /*implements UserDetailsService*/ {
     @Autowired private UserRepository userRep;
     @Autowired private PasswordEncoder passwordEncoder;
 
-    public void addUser(User user) {
+    public User addUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRep.save(user);
+        return userRep.save(user);
     }
 
     public List<User> getAllUsers() {
