@@ -1,10 +1,10 @@
-package com.cognizant.UserManagementSystem;
+package com.cognizant.TaskManagementSystem;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class UserManagementSystemApplicationTests {
+class TaskManagementSystemApplicationTests {
 
 	@Test
 	void contextLoads() {

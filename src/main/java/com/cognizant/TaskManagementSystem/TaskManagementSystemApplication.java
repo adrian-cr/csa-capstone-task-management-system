@@ -1,13 +1,13 @@
-package com.cognizant.UserManagementSystem;
+package com.cognizant.TaskManagementSystem;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class UserManagementSystemApplication {
+public class TaskManagementSystemApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(UserManagementSystemApplication.class, args);
+		SpringApplication.run(TaskManagementSystemApplication.class, args);
 	}
 
 }
