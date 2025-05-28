@@ -1,6 +1,7 @@
 package com.cognizant.TaskManagementSystem.config;
 
 import com.cognizant.TaskManagementSystem.filters.JwtFilter;
+import com.cognizant.TaskManagementSystem.filters.RequestLoggingFilter;
 import com.cognizant.TaskManagementSystem.services.UserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -11,6 +12,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -38,12 +40,15 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(csrf -> csrf.disable())
+                .addFilterBefore(
+                    new RequestLoggingFilter(),
+                    UsernamePasswordAuthenticationFilter.class
+                )
+                .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login").permitAll()
-                        .requestMatchers("/signup").permitAll()
-                        .anyRequest().permitAll()//CHANGE BEFORE DELIVERY
+                    .requestMatchers("/login/**", "/signup/**", "/actuator/**").permitAll()
+                    .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
