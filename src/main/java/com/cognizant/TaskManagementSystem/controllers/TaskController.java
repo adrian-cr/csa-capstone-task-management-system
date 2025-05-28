@@ -16,8 +16,7 @@ import java.util.List;
 public class TaskController {
     @Autowired TaskService ts;
     @Autowired UserService us;
-
-
+    
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping
     public List<Task> getTasks() {
@@ -41,7 +40,7 @@ public class TaskController {
     @PreAuthorize("@userSecurity.hasUserId(#userId)")
     @PostMapping("/{userId}")
     public Task addTask(@RequestBody Task task, @PathVariable("userId") Integer userId) {
-        if (task.getTitle()==null || task.getDescription()==null || task.getStatus()==null || task.getPriority()==null || task.getDueDate()==null) throw new InvalidRequestException("All required fields must be provided.");
+        if (task.getTitle()==null || task.getDescription()==null || task.getPriority()==null || task.getDueDate()==null) throw new InvalidRequestException("All required fields must be provided.");
         if (us.getUser(userId)==null) throw new NotFoundException();
         User user = us.getUser(userId);
         user.addTask(task);
