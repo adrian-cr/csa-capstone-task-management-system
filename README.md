@@ -121,7 +121,7 @@ csa-capstone-task-management-system (TaskManagementSystem)
 | PUT    | `/users/{userId}`          | Update _USER_ details         | _USER_        |
 | DELETE | `/users/{userId}`          | Delete _USER_                 | Admin, _USER_ |
 
-* Full Swagger/OpenAPI docs available at `/swagger-ui.html`.
+You can test these endpoints through the project's `openAPI.yaml` file.
 
 
 ## Getting Started
@@ -129,8 +129,6 @@ csa-capstone-task-management-system (TaskManagementSystem)
 2. Configure `application.properties` as needed.
 3. Build and run through `TaskManagementSystemApplication.java`.
 4. Ensure MySQL is running and the database `task_management_db` is created.
-5. Test API endpoints using tools like Postman or cURL (`PORT 8080`).
+5. Test API endpoints using tools like Postman or cURL (`PORT 8080`) or through the project's `openAPI.yaml` file.
 
 **Remember to set up the MySQL database and adjust the connection settings in `application.properties` as necessary.*
-
-Access API docs at `http://localhost:8080/swagger-ui.html`.
