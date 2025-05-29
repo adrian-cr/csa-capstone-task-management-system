@@ -1,0 +1,376 @@
+openapi: 3.0.3
+info:
+  title: Task Management System API
+  description: API for managing tasks across role-based teams
+  version: 1.0.0
+paths:
+  /signup:
+    post:
+      summary: Sign up a new user
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: User successfully created
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /login:
+    post:
+      summary: Log in with existing user credentials
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Successfully logged in
+        '403':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /tasks:
+    get:
+      summary: List all tasks
+      tags:
+        - Tasks
+      security:
+        - bearerAuth: [ ]
+      responses:
+        '200':
+          description: List of all tasks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+        '403':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /tasks/{userId}:
+    post:
+      summary: Create a new task for user
+      tags:
+        - Tasks
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - bearerAuth: [ ]
+      responses:
+        '201':
+          description: Task created successfully
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '403':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /tasks/{userId}/{taskId}:
+    get:
+      summary: Get user's task by ID
+      tags:
+        - Tasks
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - bearerAuth: [ ]
+      responses:
+        '200':
+          description: Task details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '403':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    
+    put:
+      summary: Update user's task
+      tags:
+        - Tasks
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - bearerAuth: [ ]
+      responses:
+        '200':
+          description: Task updated successfully
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '403':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    
+    delete:
+      summary: Delete user's task
+      tags:
+        - Tasks
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - bearerAuth: [ ]
+      responses:
+        '204':
+          description: Task deleted successfully
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '403':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /users:
+    get:
+      summary: List all users and their tasks
+      tags:
+        - Users
+      security:
+        - bearerAuth: [ ]
+      responses:
+        '200':
+          description: List of all users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '403':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /users/{userId}:
+    get:
+      summary: Get user by ID
+      tags:
+        - Users
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - bearerAuth: [ ]
+      responses:
+        '200':
+          description: User details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '403':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    
+    put:
+      summary: Update user details
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - bearerAuth: [ ]
+      responses:
+        '200':
+          description: User updated successfully
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '403':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    
+    delete:
+      summary: Delete user
+      tags:
+        - Users
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - bearerAuth: [ ]
+      responses:
+        '204':
+          description: User deleted successfully
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '403':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        username:
+          type: string
+        password:
+          type: string
+        role:
+          type: string
+          enum: [ admin, user ]
+        tasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/Task'
+    
+    Task:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+          enum: [ to do, in progress, completed ]
+        priority:
+          type: string
+          enum: [ low, medium, high ]
+        dueDate:
+          type: string
+          format: date-time
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Error message explaining what went wrong
+        statusCode:
+          type: integer
+          description: HTTP status code of the error
+
+  responses:
+    NotFoundError:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            message: "Sorry! We couldn't find what you're looking for. :("
+            statusCode: 404
+
+    BadRequestError:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            message: "Invalid request parameters"
+            statusCode: 400
+
+    ServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            message: "Sorry! We're experiencing some issues. Please try again later."
+            statusCode: 500
+
+    UnauthorizedError:
+      description: Unauthorized access
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            message: "Sorry! You don't have access to this resource. :("
+            statusCode: 403
